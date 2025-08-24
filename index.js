@@ -86,7 +86,7 @@ async function readAllRestaurant() {
     }
 }
 
-readAllRestaurant()
+// readAllRestaurant()
 
 // Question 4:
 
@@ -105,7 +105,7 @@ async function getRestaurantByName(restaurantName) {
     }
 }
 
-getRestaurantByName("New Restaurant")
+// getRestaurantByName("New Restaurant")
 
 // Question 5: 
 
@@ -125,7 +125,7 @@ async function getAllRestaurantsWithReservations() {
     }
 }
 
-getAllRestaurantsWithReservations()
+// getAllRestaurantsWithReservations()
 
 // Question 6: 
 
@@ -144,7 +144,7 @@ async function getAllRestaurantsWithDelivery() {
     }
 }
 
-getAllRestaurantsWithDelivery()
+// getAllRestaurantsWithDelivery()
 
 // Question 7: 
 
@@ -165,7 +165,7 @@ async function getRestaurantByPhoneNumber(phoneNumber) {
     }
 }
 
-getRestaurantByPhoneNumber("+1288997392")
+// getRestaurantByPhoneNumber("+1288997392")
 
 // Question 8: 
 
@@ -186,4 +186,45 @@ async function getRestaurantByCuisine(cuisineName){
 }
 
 
-getRestaurantByCuisine("Italian")
+// getRestaurantByCuisine("Italian")
+
+// BE2.3_HW1 
+
+// Question 1: 
+
+async function updateRestaurantById(restaurantId, dataToUpdate){
+    try{
+        const updatedRating = await Restaurant.findByIdAndUpdate(restaurantId, dataToUpdate, {new: true})
+        console.log(updatedRating)
+    }catch(error){
+        console.log("Error in updating rating.", error)
+    }
+}
+
+// updateRestaurantById("68ab22ba6eadcea50d5c444c", {rating: 4.1})
+
+// Question 2: 
+
+async function updateRestaurantByName(restaurantName, dataToUpdate){
+    try{
+        const updatedName = await Restaurant.findOneAndUpdate({name: restaurantName}, dataToUpdate, {new: true})
+        console.log(updatedName)
+    }catch(error){
+        console.log("Error in changing data.", error)
+    }
+}
+
+// updateRestaurantByName("Somi", {name: "Som Sarovar"})
+
+// Question 3: 
+
+async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate){
+    try{
+        const updatedPhoneNumber = await Restaurant.findOneAndUpdate({phoneNumber: resPhoneNumber}, dataToUpdate, {new: true})
+        console.log(updatedPhoneNumber)
+    }catch(error){
+        console.log("Error in changing phone number.")
+    }
+}
+
+// updateRestaurantByPhoneNumber("+1288997392", {isDeliveryAvailable: true})
