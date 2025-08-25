@@ -228,3 +228,29 @@ async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate){
 }
 
 // updateRestaurantByPhoneNumber("+1288997392", {isDeliveryAvailable: true})
+
+// BE2.4_HW1
+
+// Question 1: 
+
+async function deleteRestaurantById(restaurantId){
+    try{
+        const deletedRestaurant =  await Restaurant.findByIdAndDelete(restaurantId)
+        console.log("Deleted Restaurant by ID: ", deletedRestaurant)
+    }catch(error){
+        console.log("Error in Deleting Restaurant by ID.", error)
+    }
+}
+
+// deleteRestaurantById("68a7804f974699d31fe1c90e")
+
+async function deleteRestaurantByName(resName){
+    try{
+        const deletedRestaurant = await Restaurant.findOneAndDelete({name: resName})
+        console.log("Deleted Restaurant by Name: ", deletedRestaurant)
+    }catch(error){
+        console.log("Error in Deleting Restaurant by Name.", error)
+    }
+}
+
+deleteRestaurantByName("Yo China")
