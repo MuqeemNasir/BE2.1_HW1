@@ -239,11 +239,25 @@ app.get("/restaurants/location/:restaurantLocation", async (req, res) => {
 async function updateRestaurantById(restaurantId, dataToUpdate) {
     try {
         const updatedRating = await Restaurant.findByIdAndUpdate(restaurantId, dataToUpdate, { new: true })
-        console.log(updatedRating)
+        // console.log(updatedRating)
+        return updatedRating
     } catch (error) {
         console.log("Error in updating rating.", error)
     }
 }
+
+app.post("/restaurants/:restaurantId", async(req, res) => {
+    try{
+        const updRestaurant = await updateRestaurantById(req.params.restaurantId, req.body)
+        if(updRestaurant){
+            res.status(200).json({message: "Restaurant updated successfully", updRestaurant: updRestaurant})
+        }else{
+            res.status(404).json({error: "Restaurant not found."})
+        }
+    }catch(error){
+        res.status(500).json({error: "Failed to update restaurant by id"})
+    }
+})
 
 // updateRestaurantById("68ab22ba6eadcea50d5c444c", {rating: 4.1})
 
