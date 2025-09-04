@@ -280,11 +280,23 @@ async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate) {
 async function deleteRestaurantById(restaurantId) {
     try {
         const deletedRestaurant = await Restaurant.findByIdAndDelete(restaurantId)
-        console.log("Deleted Restaurant by ID: ", deletedRestaurant)
+        // console.log("Deleted Restaurant by ID: ", deletedRestaurant)
+        return deletedRestaurant
     } catch (error) {
         console.log("Error in Deleting Restaurant by ID.", error)
     }
 }
+
+app.delete("/restaurants/:restaurantId", async(req, res) => {
+    try{
+        const delRestaurant = await deleteRestaurantById(req.params.restaurantId)
+        if(delRestaurant){
+            res.status(200).json({message: "Restaurant deleted successfully."})
+        }
+    }catch(error){
+        res.status(500).json({error: "Failed to delete restaurant."})
+    }
+})
 
 // deleteRestaurantById("68a7804f974699d31fe1c90e")
 
