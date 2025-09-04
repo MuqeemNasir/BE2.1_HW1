@@ -8,7 +8,7 @@ const restaurantSchema = new mongoose.Schema({
     },
     cuisine: {
         type: [String],
-        enum: [ 'American', 'Italian', 'Chinese', 'Indian', 'Japanese', 'Mexican', 'Thai', 'French', 'Mediterranean', 'Greek', 'Spanish',  'Other'],
+        enum: [ 'American', 'Italian','Mughlai', 'Chinese', 'Indian', 'Japanese', 'Mexican', 'Thai', 'French', 'Mediterranean', 'Greek', 'Spanish',  'Other'],
         required: true,
     },
     location: {

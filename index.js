@@ -9,63 +9,25 @@ app.use(express.json())
 
 initializeDatabase()
 
-// const newRestaurant = {
-//   name: "Cha Cha",
-//   cuisine: ["Spanish"],
-//   location: "123 Main Street, Anytown",
-//   rating: 4.0,
-//   reviews: [],
-//   website: "https://example.com",
-//   phoneNumber: "+1234567890",
-//   openHours: "Mon-Sun: 11:00 AM - 10:00 PM",
-//   priceRange: "$$ (11-30)",
-//   reservationsNeeded: true,
-//   isDeliveryAvailable: true,
-//   menuUrl: "https://example.com/menu",
-//   photos: ["https://example.com/photo1.jpg", "https://example.com/photo2.jpg"],
-// };
+async function createRestaurant(newRestaurant) {
+    try {
+        const restaurant = new Restaurant(newRestaurant)
+        const saveRestaurant = await restaurant.save()
+        // console.log("New Restaurant data: ", saveRestaurant)
+        return saveRestaurant
+    } catch (error) {
+        throw error
+    }
+}
 
-// const somiRestaurant = {
-//     name: "Somi",
-//     cuisine: ["Greek"],
-//     location: "11 Main Road, Gem",
-//     rating: 4.3,
-//     reviews: [],
-//     website: "https://somi-example.com",
-//     phoneNumber: "+1234997390",
-//     openHours: "Tue-Sun: 11:00 AM - 10:00 PM",
-//     priceRange: "$$ (11-30)",
-//     reservationsNeeded: false,
-//     isDeliveryAvailable: true,
-//     menuUrl: "https://somi-example.com/menu",
-//     photos: ["https://example.com/somi-photo1.jpg", "https://example.com/somi-photo2.jpg"],
-// };
-
-// const yoChinaRestaurant = {
-//     name: "Yo China",
-//     cuisine: ["Chinese", "Italian"],
-//     location: "MG Road, Bangalore",
-//     rating: 3.9,
-//     reviews: [],
-//     website: "https://yo-example.com",
-//     phoneNumber: "+1288997392",
-//     openHours: "Tue-Sun: 10:00 AM - 11:00 PM",
-//     priceRange: "$$$ (31-60)",
-//     reservationsNeeded: true,
-//     isDeliveryAvailable: false,
-//     menuUrl: "https://yo-example.com/menu",
-//     photos: ["https://example.com/yo-photo1.jpg", "https://example.com/yo-photo2.jpg", "https://example.com/yo-photo3.jpg"]
-// };
-
-// async function createRestaurant(newRestaurant) {
-//     try {
-//         const restaurant = new Restaurant(newRestaurant)
-//         const saveRestaurant = await restaurant.save()
-//         console.log("New Restaurant data: ", saveRestaurant)
-//     } catch (error) {
-//         throw error
-//     }
-// }
+app.post("/restaurants", async (req, res) => {
+    try {
+                const savedRestaurant = await createRestaurant(req.body)
+        res.status(201).json({ message: "Restaurant added successfully.", restaurant: savedRestaurant })
+    } catch (error) {
+        res.status(500).json({ error: "Failed to add Restaurant." })
+    }
+})
 
 // // Question 1 & 2
 
@@ -89,16 +51,16 @@ async function readAllRestaurant() {
     }
 }
 
-app.get("/restaurants", async(req, res) => {
-    try{
+app.get("/restaurants", async (req, res) => {
+    try {
         const restaurants = await readAllRestaurant()
-        if(restaurants.length !== 0){
+        if (restaurants.length !== 0) {
             res.json(restaurants)
-        }else{
-            res.status(404).json({error: "No Restaurants found."})
+        } else {
+            res.status(404).json({ error: "No Restaurants found." })
         }
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch restaurants."})
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch restaurants." })
     }
 })
 
@@ -123,16 +85,16 @@ async function getRestaurantByName(restaurantName) {
     }
 }
 
-app.get("/restaurants/:restaurantName", async(req, res) => {
-    try{
+app.get("/restaurants/:restaurantName", async (req, res) => {
+    try {
         const restaurant = await getRestaurantByName(req.params.restaurantName)
-        if(restaurant.length !== 0){
+        if (restaurant.length !== 0) {
             res.json(restaurant)
-        }else{
-            res.status(404).json({error: "Restaurant not found by name."})
+        } else {
+            res.status(404).json({ error: "Restaurant not found by name." })
         }
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch restaurants by name."})
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch restaurants by name." })
     }
 })
 
@@ -197,16 +159,16 @@ async function getRestaurantByPhoneNumber(phoneNumber) {
     }
 }
 
-app.get("/restaurants/directory/:phoneNumber", async(req, res) => {
-    try{
+app.get("/restaurants/directory/:phoneNumber", async (req, res) => {
+    try {
         const restaurant = await getRestaurantByPhoneNumber(req.params.phoneNumber)
-        if(restaurant.length !== 0){
+        if (restaurant.length !== 0) {
             res.json(restaurant)
-        }else{
-            res.status(404).json({error: "Restaurant not found by phone number."})
+        } else {
+            res.status(404).json({ error: "Restaurant not found by phone number." })
         }
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch restaurants by phone number."})
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch restaurants by phone number." })
     }
 })
 
@@ -214,59 +176,59 @@ app.get("/restaurants/directory/:phoneNumber", async(req, res) => {
 
 // Question 8: 
 
-async function getRestaurantByCuisine(cuisineName){
-    try{
-        const cuisineRestaurant = await Restaurant.find({cuisine: cuisineName})
-        if(cuisineRestaurant){
+async function getRestaurantByCuisine(cuisineName) {
+    try {
+        const cuisineRestaurant = await Restaurant.find({ cuisine: cuisineName })
+        if (cuisineRestaurant) {
             // console.log(`Restaurants details with "${cuisineName}" cuisine: `, cuisineRestaurant)
             // mongoose.connection.close()
             return cuisineRestaurant
-        }else{
+        } else {
             console.log(`No Restaurant found with "${cuisineName}" cuisine.`)
             // mongoose.connection.close()
         }
-    }catch(error){
+    } catch (error) {
         console.log(error)
         // mongoose.connection.close()
     }
 }
 
-app.get("/restaurants/cuisine/:cuisineName", async(req, res) => {
-    try{
+app.get("/restaurants/cuisine/:cuisineName", async (req, res) => {
+    try {
         const restaurants = await getRestaurantByCuisine(req.params.cuisineName)
-        if(restaurants.length !== 0){
+        if (restaurants.length !== 0) {
             res.json(restaurants)
-        }else{
-            res.status(404).json({error: "Restaurant not found by cuisine."})
+        } else {
+            res.status(404).json({ error: "Restaurant not found by cuisine." })
         }
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch restaurants by cuisine."})
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch restaurants by cuisine." })
     }
 })
 
 // getRestaurantByCuisine("Italian")
 
-async function getRestaurantByLocation(resLocation){
-    try{
-        const restaurant = await Restaurant.find({location: resLocation})
-        if(restaurant){
+async function getRestaurantByLocation(resLocation) {
+    try {
+        const restaurant = await Restaurant.find({ location: resLocation })
+        if (restaurant) {
             return restaurant
         }
-    }catch(error){
+    } catch (error) {
         console.log("Error in getting location restaurant.")
     }
 }
 
-app.get("/restaurants/location/:restaurantLocation", async(req, res) => {
-    try{
+app.get("/restaurants/location/:restaurantLocation", async (req, res) => {
+    try {
         const restaurant = await getRestaurantByLocation(req.params.restaurantLocation)
-        if(restaurant.length !== 0){
+        if (restaurant.length !== 0) {
             res.json(restaurant)
-        }else{
-            res.status(404).json({error: "Restaurant not found by location."})
+        } else {
+            res.status(404).json({ error: "Restaurant not found by location." })
         }
-    }catch(error){
-        res.status(500).json({error: "Failed to fetch restaurant by location"})
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch restaurant by location" })
     }
 })
 
@@ -274,11 +236,11 @@ app.get("/restaurants/location/:restaurantLocation", async(req, res) => {
 
 // Question 1: 
 
-async function updateRestaurantById(restaurantId, dataToUpdate){
-    try{
-        const updatedRating = await Restaurant.findByIdAndUpdate(restaurantId, dataToUpdate, {new: true})
+async function updateRestaurantById(restaurantId, dataToUpdate) {
+    try {
+        const updatedRating = await Restaurant.findByIdAndUpdate(restaurantId, dataToUpdate, { new: true })
         console.log(updatedRating)
-    }catch(error){
+    } catch (error) {
         console.log("Error in updating rating.", error)
     }
 }
@@ -287,11 +249,11 @@ async function updateRestaurantById(restaurantId, dataToUpdate){
 
 // Question 2: 
 
-async function updateRestaurantByName(restaurantName, dataToUpdate){
-    try{
-        const updatedName = await Restaurant.findOneAndUpdate({name: restaurantName}, dataToUpdate, {new: true})
+async function updateRestaurantByName(restaurantName, dataToUpdate) {
+    try {
+        const updatedName = await Restaurant.findOneAndUpdate({ name: restaurantName }, dataToUpdate, { new: true })
         console.log(updatedName)
-    }catch(error){
+    } catch (error) {
         console.log("Error in changing data.", error)
     }
 }
@@ -300,11 +262,11 @@ async function updateRestaurantByName(restaurantName, dataToUpdate){
 
 // Question 3: 
 
-async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate){
-    try{
-        const updatedPhoneNumber = await Restaurant.findOneAndUpdate({phoneNumber: resPhoneNumber}, dataToUpdate, {new: true})
+async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate) {
+    try {
+        const updatedPhoneNumber = await Restaurant.findOneAndUpdate({ phoneNumber: resPhoneNumber }, dataToUpdate, { new: true })
         console.log(updatedPhoneNumber)
-    }catch(error){
+    } catch (error) {
         console.log("Error in changing phone number.")
     }
 }
@@ -315,22 +277,22 @@ async function updateRestaurantByPhoneNumber(resPhoneNumber, dataToUpdate){
 
 // Question 1: 
 
-async function deleteRestaurantById(restaurantId){
-    try{
-        const deletedRestaurant =  await Restaurant.findByIdAndDelete(restaurantId)
+async function deleteRestaurantById(restaurantId) {
+    try {
+        const deletedRestaurant = await Restaurant.findByIdAndDelete(restaurantId)
         console.log("Deleted Restaurant by ID: ", deletedRestaurant)
-    }catch(error){
+    } catch (error) {
         console.log("Error in Deleting Restaurant by ID.", error)
     }
 }
 
 // deleteRestaurantById("68a7804f974699d31fe1c90e")
 
-async function deleteRestaurantByName(resName){
-    try{
-        const deletedRestaurant = await Restaurant.findOneAndDelete({name: resName})
+async function deleteRestaurantByName(resName) {
+    try {
+        const deletedRestaurant = await Restaurant.findOneAndDelete({ name: resName })
         console.log("Deleted Restaurant by Name: ", deletedRestaurant)
-    }catch(error){
+    } catch (error) {
         console.log("Error in Deleting Restaurant by Name.", error)
     }
 }
@@ -339,6 +301,6 @@ async function deleteRestaurantByName(resName){
 
 const PORT = 3000
 
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
